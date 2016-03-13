@@ -20,7 +20,7 @@ class Test():
                 editArea.insert(tk.END,newRecordTable[i]+"\n")
                 editArea.see(tk.END)
         except:
-            print("error")
+            print("no new message")
   
         parent.update()
         
