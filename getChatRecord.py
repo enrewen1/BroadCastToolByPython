@@ -1,30 +1,36 @@
 
-import os,time
+import os, time
 from selenium import webdriver
 
-driverPath = os.getcwd() + '/chromedriver'
-browser = webdriver.Chrome(driverPath)
-NumberOfPosts=0
+driverPath =os.getcwd() + '/chromedriver'
+options = webdriver.ChromeOptions()
+options.add_argument("user-data-dir=C:/Users/LoveYoplus/AppData/Local/Google/Chrome/User Data")
+browser = webdriver.Chrome(executable_path=driverPath,chrome_options=options)
 
-def connect(timeForFirstLoad=5,urlOfLoadPage="www.google.com"):
-         
+NUMBEROFPOSTS = 0
+# connect to Page and set the load time,load page
+def connect(timeForFirstLoad=5, urlOfLoadPage="www.google.com"):
+    
     browser.get(urlOfLoadPage)
     time.sleep(timeForFirstLoad)
 
 def loadRecord():
-
-    nameList=browser.find_elements_by_class_name('yt-user-name')
-    lengthOfList=len(nameList)
-    recordList=[]
-    global NumberOfPosts
-    if(lengthOfList>NumberOfPosts):
-        listcomment=browser.find_elements_by_class_name('comment-text')
-        for i in range(lengthOfList-NumberOfPosts):
-            recordList.append(nameList[-lengthOfList+NumberOfPosts+i].text+":"+listcomment[-lengthOfList+NumberOfPosts+i].text)
-        NumberOfPosts=lengthOfList
+    className=["yt-user-name","comment-text","author"]
+    commentList = browser.find_elements_by_class_name(className[1])
+    lengthOfList = len(commentList)
+    recordList = []
+    global NUMBEROFPOSTS
+    if(lengthOfList > NUMBEROFPOSTS):
+        nameList = browser.find_elements_by_class_name(className[0])
+        for i in range(lengthOfList - NUMBEROFPOSTS):
+            recordList.append(nameList[-lengthOfList + NUMBEROFPOSTS + i].text + ":" + commentList[-lengthOfList + NUMBEROFPOSTS + i].text)
+        NUMBEROFPOSTS = lengthOfList
         
         return recordList
     
-    
-    #browser.quit() # 關閉 chromedriver
+def sendMessage(text):
+    element = browser.find_element_by_id("live-comments-input-field")
+    element.send_keys(text)
+    element.submit()
+    # browser.quit() # 關閉 chromedriver
 

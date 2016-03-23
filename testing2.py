@@ -1,11 +1,6 @@
-import htmlPy
-import os
+import os, time
+from selenium import webdriver
+urlOfLoadPage="http://www.yahoo.com.tw"
+driverPath =os.getcwd() + '/chromedriver'
 
-app = htmlPy.AppGUI(title=u"htmlPy Quickstart", maximized=True)
-
-app.template_path = os.path.abspath(".")
-app.static_path = os.path.abspath(".")
-
-app.template = ("index.html", {"username": "htmlPy_user"})
-
-app.start()
+print(type("ss"))

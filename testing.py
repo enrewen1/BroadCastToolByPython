@@ -1,15 +1,9 @@
 import tkinter as tk # Python 3
 import tkinter.scrolledtext as tkst
 import getChatRecord
-import threading
-from turtledemo.nim import COLOR
-from selenium.webdriver.support.color import Color
-
-
-
 
 class Test():
-    def getNew(self,parent):
+    def getNewMessage(self,parent,editArea):
         
         rowOfNewTable=0
         newRecordTable=getChatRecord.loadRecord()
@@ -21,26 +15,48 @@ class Test():
                 editArea.see(tk.END)
         except:
             print("no new message")
+            
   
         parent.update()
         
+    def setWindowView(self,mainWindow,title,):
+        mainWindow.title(title)
+        mainWindow.wm_attributes('-topmost',1)
+        mainWindow.attributes('-alpha', 1)   
         
+    def setEditArea(self,parent):
         
-     
-
-root = tk.Tk()
-root.title("YOGA版聊天室")
-root.wm_attributes('-topmost',1)
-#root.attributes('-alpha', 0.1)   
-editArea = tkst.ScrolledText(
-        master = root,
+        editArea = tkst.ScrolledText(
+        master = parent,
         wrap   = tk.WORD,
         width  = 20,
         height = 10,
         
         )
+        editArea.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+        
+        return editArea
+    def enterKey(self,a):
+        print("pressed enter")
+        print(a.get())
+        getChatRecord.sendMessage(a.get())
+        a.delete(0,"end")
+    
+tool =Test()
+root = tk.Tk()
 
-editArea.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+tool.setWindowView(root,"YOGA版聊天室")
+
+editAreaParent=root
+editArea = tool.setEditArea(editAreaParent)
+
+a=tk.Entry(bd=5)
+a.pack(fill=tk.X)
+
+
+root.bind('<Return>',(lambda event: tool.enterKey(a)))
+
 
 
 
@@ -49,8 +65,12 @@ editArea.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 urlOfLoadPage="https://www.youtube.com/live_chat?v=QARPzMkjcCg&is_popout=1"
 getChatRecord.connect(5,urlOfLoadPage)
 
-tool =Test()
+
 while True:
-    tool.getNew(root)
-#root.after(1,tool.getNew(root))
+   
+    tool.getNewMessage(root,editArea)
+    
+    
+
+
 root.mainloop()
